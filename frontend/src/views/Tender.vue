@@ -1,13 +1,13 @@
 <template>
   <div class="bg-background w-full min-h-screen duration-500">
-    <AssistantWindow />
+    <TenderWindow />
   </div>
 </template>
 <script>
-import AssistantWindow from "@/components/AssistantWindow.vue";
+import TenderWindow from "@/components/TenderWindow.vue";
 
 export default {
-  components: { AssistantWindow },
+  components: { TenderWindow },
 };
 </script>
 <style></style>
