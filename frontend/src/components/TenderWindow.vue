@@ -68,11 +68,9 @@
             </svg>
           </div>
           <p class="text-activeText px-4">—</p>
-          <input <<<<<<< HEAD class="rounded-md w-1/6 h-10 placeholder:pl-2.5
-          placeholder:text-sm border-2 border-neutral-300 shadow-sm" =======
-          type="number" min="0" step="1" class="rounded-md w-1/6 h-10
-          placeholder:pl-2.5 placeholder:text-sm" >>>>>>>
-          a25336c76de8b5800b2c72c927f482adad7f8944 placeholder="0" />
+          <input class="rounded-md w-1/6 h-10 placeholder:pl-2.5
+          placeholder:text-sm border-2 border-neutral-300 shadow-sm" 
+          type="number" min="0" step="1">
           <div class="pl-1">
             <svg
               fill="currentColor"
