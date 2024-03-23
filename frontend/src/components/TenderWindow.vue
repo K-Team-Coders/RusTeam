@@ -4,10 +4,37 @@
       <SidebarMain />
     </div>
     <div
-      class="ml-72 w-5/6 outline-dashed bg-frameBackground rounded-xl outline-[1px] outline-outlineColor duration-500"
+      class="ml-72 w-5/6 bg-frameBackground rounded-xl border-[0.5px] border-neutral-600 duration-500"
     >
-      <div class="h-full px-2">
-
+      <div class="flex flex-col gap-3 h-full p-4">
+        <div class="flex items-start w-full">
+          <p class="text-activeText w-1/6">Ключевые слова</p>
+          <input
+            class="rounded-md w-4/6 h-12 placeholder:pl-2.5 placeholder:text-sm"
+            placeholder="Например: сталь, 36.40.11.133"
+          />
+        </div>
+        <div class="flex items-center w-full">
+          <p class="text-activeText w-1/6">Исключить слова</p>
+          <input class="rounded-md w-4/6 h-8" />
+        </div>
+        <div class="flex items-center w-full">
+          <p class="text-activeText w-1/6">Цена</p>
+          <input
+            class="rounded-md w-1/6 h-10 placeholder:pl-2.5 placeholder:text-sm"
+            placeholder="0"
+          />
+          <p class="text-activeText pl-1 text-xl">₽</p>
+          <p class="text-activeText px-4">—</p>
+          <input
+            class="rounded-md w-1/6 h-10 placeholder:pl-2.5 placeholder:text-sm"
+            placeholder="0"
+          />
+          <p class="text-activeText pl-1 text-xl">₽</p>
+        </div>
+        <div>
+          <button type="button" class="text-activeText border-2 px-4 py-2 rounded-md">Найти</button>
+        </div>
       </div>
     </div>
   </div>
