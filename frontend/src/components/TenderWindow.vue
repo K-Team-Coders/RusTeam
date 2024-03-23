@@ -160,7 +160,7 @@
         </div>
         <!-- Карточки найденных тендеров -->
         <div class="pt-2">
-          <TenderCard v-for="i in 10"/>
+          <TenderCard v-for="el in 10" />
         </div>
       </div>
     </div>
