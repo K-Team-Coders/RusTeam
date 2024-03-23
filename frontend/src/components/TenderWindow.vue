@@ -12,7 +12,7 @@
           <p class="text-activeText text-xl font-bold text-center">Поиск</p>
           <div class="flex flex-col gap-3 border-neutral-600 duration-500 pt-4">
             <!-- Ключевые слова -->
-            <div class="flex items-center w-full">
+            <div class="flex items-start w-full">
               <p class="text-activeText w-1/6">Ключевые слова</p>
               <input
                 class="rounded-md w-4/6 h-12 pl-2.5 placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
