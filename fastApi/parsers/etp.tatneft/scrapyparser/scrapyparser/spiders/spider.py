@@ -1,11 +1,9 @@
+import time
 import json
 import random
-import requests
 from pathlib import Path
 from loguru import logger
-from bs4 import BeautifulSoup as BS
 
-from scrapy import Selector, Request
 import scrapy
 
 class TatneftSpider(scrapy.Spider):
@@ -26,10 +24,6 @@ class TatneftSpider(scrapy.Spider):
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse, headers=header)
-
-    def detailed_parse(self, response):
-        logger.debug(len(self.datasummary))
-
 
     def parse(self, response):
         self.datasummary = []
@@ -61,3 +55,11 @@ class TatneftSpider(scrapy.Spider):
         for url in urls_to_check:
             header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
             yield scrapy.Request(url, callback=self.detailed_parse, headers=header)
+
+    def detailed_parse(self, response):
+        time.sleep(0.2)
+        everything = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody")
+
+        # for table in everything:
+            # logger.debug(table.xpath('//td').getall())
+
