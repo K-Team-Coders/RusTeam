@@ -3,6 +3,7 @@ import random
 from pathlib import Path
 from loguru import logger
 
+from scrapy import Selector
 import scrapy
 
 class TatneftSpider(scrapy.Spider):
@@ -28,8 +29,15 @@ class TatneftSpider(scrapy.Spider):
         trs = response.xpath("//tbody/tr")
 
         # Строки с товарами
-        goods = trs[6].xpath("td")
+        goods_table = trs[6].xpath("td")
+        goods = goods_table.xpath("//td[@class=' u-tL']")
+        logger.debug(goods)
         
+        unique = []
         for good in goods:
-            for subinfo in good.xpath("//td[@class=' u-tL']"):
-                logger.debug(subinfo)
+            logger.debug(good.xpath("@headers").get())
+            logger.debug(good.css("td::text").get())
+            
+            unique.append(good.xpath("@headers").get())
+        logger.debug(list(set(unique)))
+            
