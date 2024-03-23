@@ -7,14 +7,10 @@
 </template>
 
 <script>
-import Header2 from "@/components/Header2.vue";
-import Footer from "@/components/Footer.vue";
 import SearchDocumentWindow from "@/components/SearchDocumentWindow.vue";
 
 export default {
   components: {
-    Header2,
-    Footer,
     SearchDocumentWindow,
   },
 };
