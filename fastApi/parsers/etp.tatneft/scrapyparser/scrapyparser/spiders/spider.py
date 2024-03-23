@@ -1,7 +1,9 @@
 import json
 import random
+import requests
 from pathlib import Path
 from loguru import logger
+from bs4 import BeautifulSoup as BS
 
 from scrapy import Selector, Request
 import scrapy
@@ -26,13 +28,16 @@ class TatneftSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse, headers=header)
 
     def detailed_parse(self, response):
-        logger.debug(response.xpath('//table'))
+        logger.debug(len(self.datasummary))
+
 
     def parse(self, response):
-        datasummary = []
+        self.datasummary = []
 
         source = response.url
         logger.debug(source)
+
+        urls_to_check = []
 
         table = response.xpath("//table[@class='a-IRR-table']")
         for tr in table.xpath('tr'):
@@ -45,8 +50,14 @@ class TatneftSpider(scrapy.Spider):
                     detailed_url = response.follow(url=url).url
                     item["DETAILED_URL"] = detailed_url
 
+                    urls_to_check.append(detailed_url)
+
                 item[f"{td.xpath('@headers').get()}"] = td.css("td::text").get()
         
-            datasummary.append(item)
+            self.datasummary.append(item)
 
-        logger.debug(datasummary)
+        logger.debug(self.datasummary)
+
+        for url in urls_to_check:
+            header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
+            yield scrapy.Request(url, callback=self.detailed_parse, headers=header)
