@@ -26,6 +26,9 @@
         <div class="flex items-center w-full">
           <p class="text-activeText w-1/6">Цена</p>
           <input
+            type="number"
+            min="0"
+            step="1"
             class="rounded-md w-1/6 h-10 placeholder:pl-2.5 placeholder:text-sm border-2 border-neutral-300 shadow-sm"
             placeholder="0"
           />
@@ -65,10 +68,11 @@
             </svg>
           </div>
           <p class="text-activeText px-4">—</p>
-          <input
-            class="rounded-md w-1/6 h-10 placeholder:pl-2.5 placeholder:text-sm border-2 border-neutral-300 shadow-sm"
-            placeholder="0"
-          />
+          <input <<<<<<< HEAD class="rounded-md w-1/6 h-10 placeholder:pl-2.5
+          placeholder:text-sm border-2 border-neutral-300 shadow-sm" =======
+          type="number" min="0" step="1" class="rounded-md w-1/6 h-10
+          placeholder:pl-2.5 placeholder:text-sm" >>>>>>>
+          a25336c76de8b5800b2c72c927f482adad7f8944 placeholder="0" />
           <div class="pl-1">
             <svg
               fill="currentColor"
