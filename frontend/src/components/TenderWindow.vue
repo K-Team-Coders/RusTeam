@@ -68,6 +68,7 @@
             </svg>
           </div>
           <p class="text-activeText px-4">—</p>
+         
           <input class="rounded-md w-1/6 h-10 placeholder:pl-2.5
           placeholder:text-sm border-2 border-neutral-300 shadow-sm" 
           type="number" min="0" step="1">
@@ -135,6 +136,7 @@
             class="rounded-md w-1/6 h-10 placeholder:pl-2.5 placeholder:text-sm border-2 border-neutral-300 shadow-sm"
             placeholder="23.03.2024"
           />
+          <VueDatePicker v-model="date" range  multi-calendars text-input placeholder="Напишите или выберите период..." locale="ru"/>
           <p class="pl-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -171,17 +173,21 @@ import AssistantCategoryService from "./AssistantCategoryService.vue";
 import AssistantCategoryServiceSection from "./AssistantCategoryServiceSection.vue";
 import BaseIcon from "./BaseIcon.vue";
 import SidebarMain from "./SidebarMain.vue";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 export default {
   components: {
     AssistantCategoryService,
     BaseIcon,
     AssistantCategoryServiceSection,
     SidebarMain,
+    VueDatePicker
   },
 
   data() {
     return {
       questionQuery: "",
+      date: null
     };
   },
 
