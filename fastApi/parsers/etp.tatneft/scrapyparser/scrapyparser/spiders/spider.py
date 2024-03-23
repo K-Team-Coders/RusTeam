@@ -14,16 +14,22 @@ class TatneftSpider(scrapy.Spider):
         ]
         self.headers = []
 
-        with open(os.path.join(Path.cwd().joinpath('collecter').joinpath('spiders'), 'agents.json')) as f:
-            self.headers = json.load(f)
+        path = Path.cwd().parent.parent.joinpath("agents.json")
+        logger.debug(path)        
 
+        with open(path, "r") as f:
+            self.headers = json.load(f)
         header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse, headers=header)
 
     def parse(self, response):
-        page = response.url.split("/")[-2]
-        logger.debug(page)
+        trs = response.xpath("//tbody/tr")
 
-        logger.debug(response.xpath("//span").get())
+        # Строки с товарами
+        goods = trs[6].xpath("td")
+        
+        for good in goods:
+            for subinfo in good.xpath("//td[@class=' u-tL']"):
+                logger.debug(subinfo)
