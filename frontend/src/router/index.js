@@ -2,60 +2,25 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
   {
-    path: "/",
-    name: "allservices",
-
-    component: () => import("../views/MainPage.vue"),
-  },
-  {
-    path: "/translater",
-    name: "TranslateService",
-
-    component: () => import("../views/TranslatedService.vue"),
-  },
-  {
-    path: "/audio_recognition",
-    name: "AudioRecognitionService",
-
-    component: () => import("../views/AudioRecognitionService.vue"),
-  },
-  {
-    path: "/text_to_audio",
-    name: "TextToAudioService",
-
-    component: () => import("../views/TextToAudio.vue"),
-  },
-  {
-    path: "/scan_from_docs",
-    name: "ScanningDocs",
-
-    component: () => import("../views/DocumentsScan.vue"),
-  },
-  {
     path: "/search_document",
     name: "SeacrhDocs",
     props(route) {
-      return {  text: route.query.text }},
+      return { text: route.query.text };
+    },
 
     component: () => import("../views/SearchDocument.vue"),
   },
   {
-    path: "/image_recognition",
-    name: "ImageRecognition",
+    path: "/tender",
+    name: "Tenders",
 
-    component: () => import("../views/ImageRecognition.vue"),
+    component: () => import("../views/Tender.vue"),
   },
   {
-    path: "/assistant",
-    name: "Assistant",
+    path: "/",
+    name: "Mainpage",
 
-    component: () => import("../views/Assistant.vue"),
-  },
-  {
-    path: "/docs",
-    name: "Swagger",
-
-    component: () => import("../views/Docs.vue"),
+    component: () => import("../views/MainPage.vue"),
   },
   {
     path: "/notfound",

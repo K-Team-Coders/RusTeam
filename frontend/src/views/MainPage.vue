@@ -38,7 +38,12 @@
             <li
               class="hover:bg-neutral-300 bg-neutral-200 duration-300 py-0.5 cursor-pointer"
             >
-              <router-link :to="{ path: '/search_document', query: { text: makeDocQuerry }}">
+              <router-link
+                :to="{
+                  path: '/search_document',
+                  query: { text: makeDocQuerry },
+                }"
+              >
                 <div class="flex justify-between">
                   <span class="px-4 font-semibold py-2">
                     {{ query }}
@@ -151,58 +156,19 @@ export default {
     return {
       datacard: [
         {
-          name: "Ассистент",
-          subtitle: "Информационный справочник",
-          url: "/assistant",
+          name: "Тендеры",
+          subtitle: "Актуальные предложения",
+          url: "/tender",
           icon: "chat",
         },
         {
-          name: "Поиск документов",
-          subtitle:
-            "Возможность найти определенный документ из общей базы данных документов",
-          url: "/search_document/",
+          name: "Архив тендеров",
+          subtitle: "Возможность найти прошедший тендер",
+          url: "/search_document",
           icon: "search",
         },
-        {
-          name: "Переводчик",
-          subtitle:
-            "Возможность перевода с иностранных языков на русский и наоборот",
-          url: "/translater",
-          icon: "translate",
-        },
-        {
-          name: "Распознавание текста",
-          subtitle: "Возможность распознать текст с картинки",
-          url: "/scan_from_docs",
-          icon: "eye",
-        },
-
-        {
-          name: "Распознавание аудио",
-          subtitle: "Преобразование голосовой речи в текстовый формат",
-          url: "/audio_recognition",
-          icon: "microphone",
-        },
-        {
-          name: "Преобразование текста в аудио",
-          subtitle: "Преобразование текста в аудио",
-          url: "/text_to_audio",
-          icon: "gromko",
-        },
-        {
-          name: "Распознавание на изображении",
-          subtitle: "Возможность узнать что за объект на фотографии",
-          url: "/image_recognition",
-          icon: "flag",
-        },
-        {
-          name: "Формирование документов",
-          subtitle: "хз",
-          url: "/",
-          icon: "news",
-        },
       ],
-      query: '',
+      query: "",
       filteredData: [],
       llamaMessage: "",
       wikiMessage: "",
@@ -220,9 +186,9 @@ export default {
       return this.filteredData;
     },
 
-    makeDocQuerry(){
-      return this.query == null ? '' : this.query
-    }
+    makeDocQuerry() {
+      return this.query == null ? "" : this.query;
+    },
   },
 
   methods: {
