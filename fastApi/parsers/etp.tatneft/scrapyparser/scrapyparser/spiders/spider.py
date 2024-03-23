@@ -26,8 +26,7 @@ class TatneftSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse, headers=header)
 
     def detailed_parse(self, response):
-        logger.debug("Here")
-        logger.debug(response.text)
+        logger.debug(response.xpath('//table'))
 
     def parse(self, response):
         datasummary = []
@@ -43,23 +42,11 @@ class TatneftSpider(scrapy.Spider):
                 url = td.xpath("a").xpath("@href").get()
 
                 if url:
-                    resp = response.follow(url)
-                    self.detailed_parse(resp)
+                    detailed_url = response.follow(url=url).url
+                    item["DETAILED_URL"] = detailed_url
 
                 item[f"{td.xpath('@headers').get()}"] = td.css("td::text").get()
+        
             datasummary.append(item)
 
         logger.debug(datasummary)
-
-        # # Строки с товарами
-        # goods_table = trs[6].xpath("td")
-        # goods = goods_table.xpath("//td[@class=' u-tL']")
-        # logger.debug(goods)
-        
-        # for good in goods:
-        #     logger.debug(good.xpath("@headers").get())
-        #     logger.debug(good.css("td::text").get())
-            
-        #     unique.append(good.xpath("@headers").get())
-        # logger.debug(list(set(unique)))
-            
