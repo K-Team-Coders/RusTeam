@@ -148,7 +148,7 @@
           <p class="text-neutral-400 text-sm">125 300 закупок</p>
           <select
             name="pets"
-            class="rounded-md px-2 py-1 ml-2 text-sm border-2 border-neutral-300 shadow-sm"
+            class="rounded-md px-2 py-1 ml-4 text-sm border-2 border-neutral-300 shadow-sm"
           >
             <option value="">По дате публикации (убыв.)</option>
             <option value="">По дате публикации (возр.)</option>

@@ -11,16 +11,10 @@ const routes = [
     component: () => import("../views/SearchDocument.vue"),
   },
   {
-    path: "/tender",
+    path: "/",
     name: "Tenders",
 
     component: () => import("../views/Tender.vue"),
-  },
-  {
-    path: "/",
-    name: "Mainpage",
-
-    component: () => import("../views/MainPage.vue"),
   },
   {
     path: "/notfound",

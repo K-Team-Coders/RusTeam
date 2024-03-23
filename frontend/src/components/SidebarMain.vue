@@ -58,8 +58,8 @@ export default {
           category: "Тендеры",
           name: "chat",
           classed: "w-8 h-8 text-blue-400",
-          route: "/tender",
-          isActive: this.$route.path === "/tender",
+          route: "/",
+          isActive: this.$route.path === "/",
         },
         {
           category: "Архив",

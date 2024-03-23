@@ -10,7 +10,7 @@
         <p
           class="text-center text-4xl font-black font-mono text-activeText duration-500"
         >
-          Документы
+          Архив
         </p>
       </div>
       <div class="w-5/6">
