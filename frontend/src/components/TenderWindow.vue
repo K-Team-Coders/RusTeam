@@ -4,141 +4,147 @@
       <SidebarMain />
     </div>
     <div
-      class="ml-72 w-full bg-frameBackground rounded-xl  border-[0.5px] " 
+      class="ml-72 w-full bg-frameBackground rounded-md border-[0.5px] duration-500"
     >
-      <div class="h-full p-4 ">
-        <div class="flex flex-col gap-3 border-neutral-600 duration-500 px-28 outline-dashed outline-[3px] outline-outlineColor py-8">
-          <!-- Ключевые слова -->
-          <div class="flex items-center w-full">
-            <p class="text-activeText w-1/6 ">Ключевые слова</p>
-            <input
-              class="rounded-md w-4/6 h-12 placeholder:pl-2.5 text-center placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
-              placeholder="Например: сталь, 36.40.11.133"
-            />
-          </div>
-          <!-- Исключить слова -->
-          <div class="flex items-center w-full">
-            <p class="text-activeText w-1/6">Исключить слова</p>
-            <input
-              class="rounded-md w-4/6 h-8 border-[1px] text-center border-neutral-300 shadow-sm" placeholder="Введите слова-исключения"
-            />
-          </div>
-          <!-- Цена -->
-          <div class="flex items-center w-full">
-            <p class="text-activeText w-1/6">Ценовой диапазон</p>
-            <input
-              type="number"
-              min="0"
-              step="1"
-              class="rounded-md w-1/6 h-10 placeholder:pl-2.5 text-center placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
-              placeholder="0 руб."
-            />
-            <div class="pl-1">
-              <svg
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 text-neutral-100 duration-300"
-              >
-                <path
-                  id="primary"
-                  d="M14,11H9V3h5a4,4,0,0,1,4,4h0A4,4,0,0,1,14,11ZM9,3V21M6,11H9"
-                  :style="{ stroke: isDarkMode ? 'white' : '#000000' }"
-                  style="
-                    fill: none;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                    stroke-width: 2;
-                  "
-                ></path>
-                <line
-                  id="primary-2"
-                  data-name="primary"
-                  x1="6"
-                  y1="15"
-                  x2="15"
-                  y2="15"
-                  :style="{ stroke: isDarkMode ? 'white' : '#000000' }"
-                  style="
-                    fill: none;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                    stroke-width: 2;
-                  "
-                ></line>
-              </svg>
-            </div>
-            <p class="text-activeText px-4">—</p>
-
-            <input
-              class="rounded-md w-1/6 h-10 placeholder:pl-2.5 text-center placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
-              type="number"
-              min="0"
-              step="1"
-              placeholder="0 руб."
-            />
-            <div class="pl-1">
-              <svg
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 text-neutral-100 duration-300"
-              >
-                <path
-                  id="primary"
-                  d="M14,11H9V3h5a4,4,0,0,1,4,4h0A4,4,0,0,1,14,11ZM9,3V21M6,11H9"
-                  :style="{ stroke: isDarkMode ? 'white' : '#000000' }"
-                  style="
-                    fill: none;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                    stroke-width: 2;
-                  "
-                ></path>
-                <line
-                  id="primary-2"
-                  data-name="primary"
-                  x1="6"
-                  y1="15"
-                  x2="15"
-                  y2="15"
-                  :style="{ stroke: isDarkMode ? 'white' : '#000000' }"
-                  style="
-                    fill: none;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                    stroke-width: 2;
-                  "
-                ></line>
-              </svg>
-            </div>
-          </div>
-          <!-- Дата -->
-          <div class="flex items-center w-full">
-            <p class="text-activeText w-1/6">Период публикации</p>
-            <div class="w-4/6">
-              <VueDatePicker
-                v-model="date"
-                range
-                multi-calendars
-                text-input
-                placeholder="Напишите или выберите период..."
-                locale="ru"
+      <div class="h-full p-4">
+        <!-- Блок поиска -->
+        <div class="">
+          <p class="text-activeText text-xl font-bold text-center">Поиск</p>
+          <div class="flex flex-col gap-3 border-neutral-600 duration-500 pt-4">
+            <!-- Ключевые слова -->
+            <div class="flex items-center w-full">
+              <p class="text-activeText w-1/6">Ключевые слова</p>
+              <input
+                class="rounded-md w-4/6 h-12 pl-2.5 placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
+                placeholder="Например: сталь, 36.40.11.133"
               />
             </div>
-          </div>
-          <!-- Кнопка найти -->
-          <div class="flex">
-            <button
-              type="button"
-              class="text-activeText px-5 py-2 rounded-md bg-blue-700 text-neutral-100 shadow-sm hover:bg-blue-900 duration-300"
-            >
-              Найти
-            </button>
+            <!-- Исключить слова -->
+            <div class="flex items-center w-full">
+              <p class="text-activeText w-1/6">Исключить слова</p>
+              <input
+                class="rounded-md pl-2.5 w-4/6 h-8 border-[1px] text-sm border-neutral-300 shadow-sm"
+                placeholder="Введите слова-исключения"
+              />
+            </div>
+            <!-- Цена -->
+            <div class="flex items-center w-full">
+              <p class="text-activeText w-1/6">Ценовой диапазон</p>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                class="rounded-md w-1/6 h-10 placeholder:pl-2.5 text-center placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
+                placeholder="0 руб."
+              />
+              <div class="pl-1">
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 text-neutral-100 duration-300"
+                >
+                  <path
+                    id="primary"
+                    d="M14,11H9V3h5a4,4,0,0,1,4,4h0A4,4,0,0,1,14,11ZM9,3V21M6,11H9"
+                    :style="{ stroke: isDarkMode ? 'white' : '#a0a0a0' }"
+                    style="
+                      fill: none;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-width: 2;
+                    "
+                  ></path>
+                  <line
+                    id="primary-2"
+                    data-name="primary"
+                    x1="6"
+                    y1="15"
+                    x2="15"
+                    y2="15"
+                    :style="{ stroke: isDarkMode ? 'white' : '#a0a0a0' }"
+                    style="
+                      fill: none;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-width: 2;
+                    "
+                  ></line>
+                </svg>
+              </div>
+              <p class="text-activeText px-4">—</p>
+
+              <input
+                class="rounded-md w-1/6 h-10 placeholder:pl-2.5 text-center placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="0 руб."
+              />
+              <div class="pl-1">
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 text-neutral-100 duration-300"
+                >
+                  <path
+                    id="primary"
+                    d="M14,11H9V3h5a4,4,0,0,1,4,4h0A4,4,0,0,1,14,11ZM9,3V21M6,11H9"
+                    :style="{ stroke: isDarkMode ? 'white' : '#a0a0a0' }"
+                    style="
+                      fill: none;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-width: 2;
+                    "
+                  ></path>
+                  <line
+                    id="primary-2"
+                    data-name="primary"
+                    x1="6"
+                    y1="15"
+                    x2="15"
+                    y2="15"
+                    :style="{ stroke: isDarkMode ? 'white' : '#a0a0a0' }"
+                    style="
+                      fill: none;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-width: 2;
+                    "
+                  ></line>
+                </svg>
+              </div>
+            </div>
+            <!-- Дата -->
+            <div class="flex items-center w-full">
+              <p class="text-activeText w-1/6">Период публикации</p>
+              <div class="w-4/6">
+                <VueDatePicker
+                  v-model="date"
+                  range
+                  multi-calendars
+                  text-input
+                  placeholder="Напишите или выберите период..."
+                  locale="ru"
+                />
+              </div>
+            </div>
+            <!-- Кнопка найти -->
+            <div class="flex pt-3">
+              <button
+                type="button"
+                class="text-activeText px-5 py-2 rounded-md bg-blue-700 text-neutral-100 shadow-sm hover:bg-blue-900 duration-300"
+              >
+                Найти
+              </button>
+            </div>
           </div>
         </div>
+        <hr class="h-px my-8 bg-gray-300" />
         <!-- Всего тендеров найдено и сортировка -->
-        <div class="flex pt-4 items-center">
+        <div class="flex items-center">
           <p class="text-neutral-400 text-sm">125 300 закупок</p>
           <select
             name="pets"
@@ -154,7 +160,7 @@
         </div>
         <!-- Карточки найденных тендеров -->
         <div class="pt-2">
-          <TenderCard />
+          <TenderCard v-for="i in 10"/>
         </div>
       </div>
     </div>

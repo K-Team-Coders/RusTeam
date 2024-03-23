@@ -2,7 +2,7 @@
   <div>
     <div class="pt-3 w-full">
       <div
-        class="border-neutral-200 border-[2px] px-4 py-3 rounded-md flex justify-between w-full duration-300"
+        class="border-neutral-200 border-[0.5px] px-4 py-3 rounded-md flex justify-between w-full duration-300"
       >
         <div class="w-7/12 flex flex-col gap-2 duration-300">
           <div>
