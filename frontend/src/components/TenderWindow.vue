@@ -152,25 +152,8 @@
           </select>
         </div>
         <!-- Карточки найденных тендеров -->
-        <div class="pt-3 w-full">
-          <div
-            class="bg-neutral-200 px-4 py-2 rounded-md grid grid-cols-3 w-full"
-          >
-            <div class="">
-              <p class="text-activeText font-bold">Закупка ТМЦ (пластины)</p>
-              <p class="text-activeText">ООО "Протехстрой"</p>
-              <p class="text-activeText">
-                Коммерческие, № 12736748 от 23.03.2024
-              </p>
-            </div>
-            <div>
-              <p class="text-activeText">756 000,00</p>
-              <p class="text-activeText">Перейти на ЭТП</p>
-            </div>
-            <div>
-              <p class="text-activeText">Порядок заявок до 28.03.2024</p>
-            </div>
-          </div>
+        <div class="pt-2">
+          <TenderCard />
         </div>
       </div>
     </div>
@@ -182,6 +165,7 @@ import AssistantCategoryService from "./AssistantCategoryService.vue";
 import AssistantCategoryServiceSection from "./AssistantCategoryServiceSection.vue";
 import BaseIcon from "./BaseIcon.vue";
 import SidebarMain from "./SidebarMain.vue";
+import TenderCard from "./TenderCard.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 export default {
@@ -190,6 +174,7 @@ export default {
     BaseIcon,
     AssistantCategoryServiceSection,
     SidebarMain,
+    TenderCard,
     VueDatePicker,
   },
 
