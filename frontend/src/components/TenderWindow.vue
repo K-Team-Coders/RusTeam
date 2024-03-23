@@ -21,12 +21,18 @@
         <div class="flex items-center w-full">
           <p class="text-activeText w-1/6">Цена</p>
           <input
+          type="number"
+          min="0"
+          step="1"
             class="rounded-md w-1/6 h-10 placeholder:pl-2.5 placeholder:text-sm"
             placeholder="0"
           />
           <p class="text-activeText pl-1 text-xl">₽</p>
           <p class="text-activeText px-4">—</p>
           <input
+          type="number"
+          min="0"
+          step="1"
             class="rounded-md w-1/6 h-10 placeholder:pl-2.5 placeholder:text-sm"
             placeholder="0"
           />
