@@ -154,7 +154,7 @@
         </div>
         <!-- Карточки найденных тендеров -->
         <div class="pt-2">
-          <TenderCard />
+          <TenderCard v-for="el in 10" />
         </div>
       </div>
     </div>
