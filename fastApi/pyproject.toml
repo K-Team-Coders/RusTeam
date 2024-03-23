@@ -10,6 +10,7 @@ python = "^3.10"
 loguru = "^0.7.2"
 fastapi = "^0.110.0"
 scrapy = "^2.11.1"
+beautifulsoup4 = "^4.12.3"
 
 
 [build-system]
