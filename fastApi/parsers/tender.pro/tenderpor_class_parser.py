@@ -1,3 +1,4 @@
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -7,6 +8,7 @@ from bs4 import BeautifulSoup
 import time
 import pandas as pd
 import requests
+from pathlib import Path
 
 
 class TenderScraper:
@@ -20,6 +22,8 @@ class TenderScraper:
         self.chrome_options.add_argument('log-level=3')
         self.table=[]
         self.buffer=[]
+        self.current_datetime = datetime.now()
+        self.formatted_date = self.current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
 
         # Создаем драйвер Chrome с использованием сервиса и опций
         self.driver = webdriver.Chrome(service=self.service, options=self.chrome_options)
@@ -36,7 +40,7 @@ class TenderScraper:
             logger.success(f"Закрыт ли конкурс: {error_elem}")
         except: 
             pass
-        
+        one_element['url']=page.url
         logger.error(error_elem)
         if len(error_elem) != 0:
             one_element["tender_name"] = "Конкурс закрыт без приглашения"
@@ -68,12 +72,17 @@ class TenderScraper:
                 organization=soup.find_all(attrs={"class":{"_black"}})
                 one_element["organization"]=organization[1].text
                 #------------
-                goods=soup.find_all(attrs={"class":{"_black text__word-break"}})
-                logger.warning(goods)
-                goods_count=soup.select('.table-history-col.c-gray.text_center._fix-80.hide-sm')[2:]
-                # logger.error(goods_count)
-                goods_type=soup.select('.table-history-col.text_center._fix-80.hide-sm')[2:]
-                # logger.debug(goods_type)
+                goods=soup.find_all("div",class_="table-history")[0].find_all(attrs={"class":{"_black text__word-break"}})
+
+                logger.error(goods)
+                
+                goods_count=soup.find_all("div", class_="table-history-col c-gray text_center _fix-80 hide-sm")[2:]
+                
+                # logger.warning(goods_count)
+                goods_type=soup.find_all("div",class_="table-history-col text_center _fix-80 hide-sm")
+                
+                
+                
                 goods_buffer=[]
                 for good, good_count, good_type in zip(goods, goods_count, goods_type):
                     goods_buffer.append({"name": good.text, "count": good_count.text, "type": good_type.text, "url": "https://www.tender.pro"+good.get("href")})
@@ -109,7 +118,7 @@ class TenderScraper:
         self.get_urls(element, data_1, data_2)
         df = pd.DataFrame(self.table)
         logger.info(df)
-        df.to_csv("data.csv", sep=';', encoding='utf-8')
+        df.to_csv(f"document_{self.formatted_date}.csv", sep=';', encoding='utf-8')
         time.sleep(11)
         return ret_data
         
@@ -118,7 +127,7 @@ class TenderScraper:
 
 
 if __name__ == "__main__":
-    tender_scraper = TenderScraper('drivers\chromedriver.exe', 'chrome-win64\chrome.exe')
+    tender_scraper = TenderScraper(str(Path.cwd().joinpath("drivers").joinpath("chromedriver.exe")),str(Path.cwd().joinpath('chrome-win64').joinpath('chrome.exe')))
     tender_scraper.driver.get('https://www.tender.pro/api/tenders/list?sid=&company_id=&face_id=0&order=3&tender_id=&tender_name=&company_name=&good_name=&tender_type=90&tender_state=100&country=0&region=&basis=0&okved=&dateb=&datee=&dateb2=&datee2=')
-    tender_scraper.scrape_data("Арматура", "10.02.2024", "15.03.2024")
+    tender_scraper.scrape_data("Арматура", "10.03.2024", "11.03.2024")
     tender_scraper.quit_driver()

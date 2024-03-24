@@ -74,13 +74,14 @@ class TenderScraper:
                 #------------
                 organization=soup.find_all(attrs={"class":{"_black"}})
                 one_element["organization"]=organization[1].text
-                #------------
-                goods=soup.find_all(attrs={"class":{"_black text__word-break"}})
-                logger.warning(goods)
-                goods_count=soup.select('.table-history-col.c-gray.text_center._fix-80.hide-sm')[2:]
-                # logger.error(goods_count)
-                goods_type=soup.select('.table-history-col.text_center._fix-80.hide-sm')[2:]
-                # logger.debug(goods_type)
+
+                goods=soup.find_all("div",class_="table-history")[0].find_all(attrs={"class":{"_black text__word-break"}})
+
+                goods_count=soup.find_all("div", class_="table-history-col c-gray text_center _fix-80 hide-sm")[2:]
+                
+                # logger.warning(goods_count)
+                goods_type=soup.find_all("div",class_="table-history-col text_center _fix-80 hide-sm")
+                
                 goods_buffer=[]
                 for good, good_count, good_type in zip(goods, goods_count, goods_type):
                     goods_buffer.append({"name": good.text, "count": good_count.text, "type": good_type.text, "url": "https://www.tender.pro"+good.get("href")})
