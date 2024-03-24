@@ -47,12 +47,14 @@
 
         <span class="font-bold"> Товары: </span>
         <div class="pt-2.5">
-          <div class="overflow-y-scroll rounded-xl h-[45vh] custom-scrollbar">
+          <div
+            class="overflow-y-scroll rounded-xl shadow-md h-[45vh] custom-scrollbar"
+          >
             <table
               class="w-full text-xs text-normal-500 table-auto 2xl:table-fixed text-center"
             >
               <thead
-                class="text-xs text-neutral-700 uppercase bg-neutral-300 font-bold "
+                class="text-xs text-neutral-700 uppercase bg-neutral-300 font-bold"
               >
                 <tr class="">
                   <th
