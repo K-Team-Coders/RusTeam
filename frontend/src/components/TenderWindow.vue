@@ -14,7 +14,7 @@
             <!-- Ключевые слова -->
             <div class="flex items-start w-full">
               <p class="text-activeText w-1/6">Ключевые слова</p>
-              <input
+              <input v-model="keyword"
                 class="rounded-md w-4/6 h-12 pl-2.5 placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
                 placeholder="Например: сталь, 36.40.11.133"
               />
@@ -28,100 +28,13 @@
               />
             </div>
             <!-- Цена -->
-            <div class="flex items-center w-full">
-              <p class="text-activeText w-1/6">Ценовой диапазон</p>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                class="rounded-md w-1/6 h-10 placeholder:pl-2.5 text-center placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
-                placeholder="0 руб."
-              />
-              <div class="pl-1">
-                <svg
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-5 h-5 text-neutral-100 duration-300"
-                >
-                  <path
-                    id="primary"
-                    d="M14,11H9V3h5a4,4,0,0,1,4,4h0A4,4,0,0,1,14,11ZM9,3V21M6,11H9"
-                    :style="{ stroke: isDarkMode ? 'white' : '#a0a0a0' }"
-                    style="
-                      fill: none;
-                      stroke-linecap: round;
-                      stroke-linejoin: round;
-                      stroke-width: 2;
-                    "
-                  ></path>
-                  <line
-                    id="primary-2"
-                    data-name="primary"
-                    x1="6"
-                    y1="15"
-                    x2="15"
-                    y2="15"
-                    :style="{ stroke: isDarkMode ? 'white' : '#a0a0a0' }"
-                    style="
-                      fill: none;
-                      stroke-linecap: round;
-                      stroke-linejoin: round;
-                      stroke-width: 2;
-                    "
-                  ></line>
-                </svg>
-              </div>
-              <p class="text-activeText px-4">—</p>
-
-              <input
-                class="rounded-md w-1/6 h-10 placeholder:pl-2.5 text-center placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="0 руб."
-              />
-              <div class="pl-1">
-                <svg
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-5 h-5 text-neutral-100 duration-300"
-                >
-                  <path
-                    id="primary"
-                    d="M14,11H9V3h5a4,4,0,0,1,4,4h0A4,4,0,0,1,14,11ZM9,3V21M6,11H9"
-                    :style="{ stroke: isDarkMode ? 'white' : '#a0a0a0' }"
-                    style="
-                      fill: none;
-                      stroke-linecap: round;
-                      stroke-linejoin: round;
-                      stroke-width: 2;
-                    "
-                  ></path>
-                  <line
-                    id="primary-2"
-                    data-name="primary"
-                    x1="6"
-                    y1="15"
-                    x2="15"
-                    y2="15"
-                    :style="{ stroke: isDarkMode ? 'white' : '#a0a0a0' }"
-                    style="
-                      fill: none;
-                      stroke-linecap: round;
-                      stroke-linejoin: round;
-                      stroke-width: 2;
-                    "
-                  ></line>
-                </svg>
-              </div>
-            </div>
+           
             <!-- Дата -->
             <div class="flex items-center w-full">
               <p class="text-activeText w-1/6">Период публикации</p>
               <div class="w-4/6">
                 <VueDatePicker
+                  day-picker
                   v-model="date"
                   range
                   multi-calendars
@@ -134,6 +47,7 @@
             <!-- Кнопка найти -->
             <div class="flex pt-3">
               <button
+              @click="searchTender()"
                 type="button"
                 class="text-activeText px-5 py-2 rounded-md bg-blue-700 text-neutral-100 shadow-sm hover:bg-blue-900 duration-300"
               >
@@ -187,23 +101,39 @@ export default {
 
   data() {
     return {
-      questionQuery: "",
+      keyword: '',
       date: null,
     };
   },
 
   methods: {
-    askQuestion() {
-      console.log(this.questionQuery);
+    searchTender() {
+      console.log({ Element: this.keyword,
+            date_1: this.datetimeToDate(this.date[0]) ,
+            date_2: this.datetimeToDate(this.date[1]) 
+          });
       axios
         .post(
-          `http://${process.env.VUE_APP_ASSISTANT_SEARCH_IP}/assistant/llamaSupportStream?text=${this.questionQuery}`,
-          { responseType: "stream" }
+          `http://${process.env.VUE_APP_SEARCH_TENDER_SERVICE_IP}/docs`,
+          { 
+            element : this.keyword,
+            date_1: this.datetimeToDate(this.date[0]),
+            date_2: this.datetimeToDate(this.date[1])
+          }
         )
         .then((response) => {
           console.log(response.data);
         });
     },
+    datetimeToDate(datetime){
+      const date = new Date(datetime);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const formattedDate = `${day}.${month}.${year}`;
+      console.log(formattedDate);
+      return formattedDate
+    }
   },
 
   computed: {

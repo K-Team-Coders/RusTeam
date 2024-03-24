@@ -5,15 +5,20 @@ from pathlib import Path
 from loguru import logger
 
 import scrapy
+from scrapy_selenium import SeleniumRequest
 
 class TatneftSpider(scrapy.Spider):
     name = "tatneft"
     
+    def __init__(self):
+        self.headers = []
+        self.datasummary = []
+        self.datasummary_items = []
+
     def start_requests(self):
         urls = [
             "https://etp.tatneft.ru/pls/tzp/f?p=220:562:13246815075804::::P562_OPEN_MODE,GLB_NAV_ROOT_ID,GLB_NAV_ID:,12920020,12920020"
         ]
-        self.headers = []
 
         path = Path.cwd().parent.parent.joinpath("agents.json")
         logger.debug(path)        
@@ -23,11 +28,14 @@ class TatneftSpider(scrapy.Spider):
         header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
 
         for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse, headers=header)
+            yield SeleniumRequest(url=url, callback=self.parse, headers=header)
+    
+    def closed(self, reason):
+        logger.debug(f'Closed, reason: {reason}')
+        logger.debug(len(self.datasummary))
+        logger.debug(len(self.datasummary_items))
 
     def parse(self, response):
-        self.datasummary = []
-
         source = response.url
         logger.debug(source)
 
@@ -50,7 +58,10 @@ class TatneftSpider(scrapy.Spider):
         
             self.datasummary.append(item)
 
-        logger.debug(self.datasummary)
+        div = response.xpath("//div[@class='a-IRR-paginationWrap a-IRR-paginationWrap--bottom']")
+        logger.debug(div.xpath('//button[@class="a-Button a-IRR-button a-IRR-button--pagination"]').get())
+        urls_to_check = []
+
 
         for url in urls_to_check:
             header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
@@ -58,8 +69,35 @@ class TatneftSpider(scrapy.Spider):
 
     def detailed_parse(self, response):
         time.sleep(0.2)
+        first_table = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td")
+
+        items = []
+
         everything = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody")
+        for table in everything.xpath("//table[@class='ReportTbl']"):
+            if ("Кол-во" and "Наименование" and "№" and "Замечание") in table.get():
+                for tr in table.xpath('tbody/tr'):
+                    row = tr.xpath('td/text()').getall()
 
-        # for table in everything:
-            # logger.debug(table.xpath('//td').getall())
+                    name = row[1]
+                    number = row[2]
+                    metrics = row[3]
+                    mark = " "
+                    if len(row) == 5:
+                        mark = row[4]
+                    
+                    current_item = {
+                        "name": name,
+                        "number": number,
+                        "metrics": metrics,
+                        "mark": mark
+                    }
 
+                    items.append(current_item)
+
+        self.datasummary_items.append(
+            {
+                "url": response.url,
+                "items": items
+            }
+        )

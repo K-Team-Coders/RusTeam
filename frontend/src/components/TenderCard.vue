@@ -7,7 +7,8 @@
         <div class="w-7/12 flex flex-col gap-2 duration-300">
           <div>
             <p
-              class="text-activeText font-medium text-lg tracking-widest duration-300"
+              @click="isModalOpen = true"
+              class="text-activeText font-medium text-lg tracking-widest duration-300 hover:underline hover:duration-150 cursor-pointer"
             >
               Закупка ТМЦ (пластины)
             </p>
@@ -15,6 +16,7 @@
               ООО "Протехстрой"
             </p>
           </div>
+          <ModalWindow v-if="isModalOpen" @close="isModalOpen = false" />
           <p
             class="text-neutral-500 duration-300 pt-2 font-normal tracking-wide"
           >
@@ -34,3 +36,18 @@
     </div>
   </div>
 </template>
+
+<script>
+import ModalWindow from "./ModalWindow.vue";
+export default {
+  components: {
+    ModalWindow,
+  },
+  data() {
+    return {
+      isModalOpen: false,
+    };
+  },
+  emits: ["close"],
+};
+</script>
