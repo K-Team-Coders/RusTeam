@@ -115,9 +115,10 @@ export default {
       axios
         .post(
           `http://${process.env.VUE_APP_SEARCH_TENDER_SERVICE_IP}/docs`,
-          { text : "stream",
-            date_1: date[0],
-            date_2: date[1]
+          { 
+            element : this.keyword,
+            date_1: this.datetimeToDate(this.date[0]),
+            date_2: this.datetimeToDate(this.date[1])
           }
         )
         .then((response) => {
