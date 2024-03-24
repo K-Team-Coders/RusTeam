@@ -8,7 +8,7 @@
     <div
       class="bg-neutral-100 rounded-lg max-w-3xl mx-auto xl:my-2 flex flex-col shadow-4xl relative"
     >
-      <div class="">
+      <div class="z-50">
         <ModalWindowButtonClose @click="close" class="absolute right-0" />
       </div>
       <div class="pt-10 flex justify-center relative">
