@@ -58,8 +58,13 @@ class TatneftSpider(scrapy.Spider):
 
     def detailed_parse(self, response):
         time.sleep(0.2)
+        first_table = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td")
+
+        index = 1
+
         everything = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody")
-
-        # for table in everything:
-            # logger.debug(table.xpath('//td').getall())
-
+        for table in everything.xpath("//table[@class='ReportTbl']"):
+            if ("Кол-во" and "Наименование" and "№" and "Замечание") in table.get():
+                logger.debug('Goods here')
+                for tr in table.xpath('tbody/tr'):
+                    logger.debug(tr.xpath('td').getall())
