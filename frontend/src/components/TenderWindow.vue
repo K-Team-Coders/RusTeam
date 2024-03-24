@@ -108,16 +108,31 @@ export default {
 
   methods: {
     searchTender() {
-      console.log(this.questionQuery);
+      console.log({ Element: this.keyword,
+            date_1: this.datetimeToDate(this.date[0]) ,
+            date_2: this.datetimeToDate(this.date[1]) 
+          });
       axios
         .post(
           `http://${process.env.VUE_APP_SEARCH_TENDER_SERVICE_IP}/docs`,
-          { text : "stream" }
+          { text : "stream",
+            date_1: date[0],
+            date_2: date[1]
+          }
         )
         .then((response) => {
           console.log(response.data);
         });
     },
+    datetimeToDate(datetime){
+      const date = new Date(datetime);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const formattedDate = `${day}.${month}.${year}`;
+      console.log(formattedDate);
+      return formattedDate
+    }
   },
 
   computed: {
