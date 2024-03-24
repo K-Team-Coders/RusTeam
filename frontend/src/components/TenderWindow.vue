@@ -75,7 +75,7 @@
         </div>
         <!-- Карточки найденных тендеров -->
         <div class="pt-2">
-          <LoaderBig v-if="isLoading" />
+          <LoaderBig v-if="isLoading" class="flex justify-center pt-16"/>
           <TenderCard
             v-else
             :tender_info="tender"

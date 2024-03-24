@@ -4,12 +4,13 @@
     <div class="pt-3 w-full">
       <div
         @click="isModalOpen = true"
-        class="border-neutral-200 border-[0.5px] px-4 py-3 rounded-md flex justify-between w-full duration-300 bg-orange-300 hover:bg-amber-600 dark:bg-orange-500 dark:hover:dark:bg-orange-600"
+        class="border-neutral-200 cursor-pointer border-[0.5px] pr-4  rounded-md flex justify-between w-full duration-300"
       >
-        <div class="w-7/12 flex flex-col gap-2 duration-300">
+        <div class=" w-[3%] bg-red-600 rounded-l-md mr-2"></div>
+        <div class="w-6/12 flex flex-col gap-2 duration-300 py-3">
           <div>
             <p
-              class="text-activeText font-medium text-lg tracking-widest duration-300 hover:underline hover:duration-150 cursor-pointer"
+              class="text-activeText font-medium text-lg tracking-widest duration-300 hover:underline hover:duration-150"
             >
               {{ tender_info.tender_name }}
             </p>
@@ -24,14 +25,14 @@
             {{ tender_info.data_created.slice(14) }}
           </p>
         </div>
-        <div class="w-2/12 text-end">
+        <div class="w-2/12 text-end py-3">
           <a
             :href="`${tender_info.url}`" target="_blank"
             class="text-activeText tracking-wide pt-1"
             >Перейти на страницу тендера</a
           >
         </div>
-        <div class="w-3/12 text-end">
+        <div class="w-3/12 text-end py-3">
           <p class="text-activeText font-semibold">
             Прием заявок до {{ tender_info.data_execution.slice(16) }}
           </p>
