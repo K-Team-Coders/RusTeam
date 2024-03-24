@@ -26,6 +26,11 @@ class TatneftSpider(scrapy.Spider):
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse, headers=header)
+    
+    def closed(self, reason):
+        logger.debug(f'Closed, reason: {reason}')
+        logger.debug(len(self.datasummary))
+        logger.debug(len(self.datasummary_items))
 
     def parse(self, response):
         source = response.url
@@ -50,7 +55,10 @@ class TatneftSpider(scrapy.Spider):
         
             self.datasummary.append(item)
 
-        logger.debug(self.datasummary)
+        div = response.xpath("//div[@class='a-IRR-paginationWrap a-IRR-paginationWrap--bottom']")
+        logger.debug(div.xpath('//button[@class="a-Button a-IRR-button a-IRR-button--pagination"]').get())
+        urls_to_check = []
+
 
         for url in urls_to_check:
             header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
