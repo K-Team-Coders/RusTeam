@@ -9,13 +9,17 @@ import scrapy
 class TatneftSpider(scrapy.Spider):
     name = "tatneft"
     
+    def __init__(self):
+        self.headers = []
+        self.datasummary = []
+        self.datasummary_items = []
+
+        self.driver = ''
+        
     def start_requests(self):
         urls = [
             "https://etp.tatneft.ru/pls/tzp/f?p=220:562:13246815075804::::P562_OPEN_MODE,GLB_NAV_ROOT_ID,GLB_NAV_ID:,12920020,12920020"
         ]
-        self.headers = []
-        self.datasummary = []
-        self.datasummary_items = []
 
         path = Path.cwd().parent.parent.joinpath("agents.json")
         logger.debug(path)        
