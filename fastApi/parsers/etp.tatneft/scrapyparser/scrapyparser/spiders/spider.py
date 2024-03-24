@@ -5,6 +5,7 @@ from pathlib import Path
 from loguru import logger
 
 import scrapy
+from scrapy_selenium import SeleniumRequest
 
 class TatneftSpider(scrapy.Spider):
     name = "tatneft"
@@ -14,8 +15,6 @@ class TatneftSpider(scrapy.Spider):
         self.datasummary = []
         self.datasummary_items = []
 
-        self.driver = ''
-        
     def start_requests(self):
         urls = [
             "https://etp.tatneft.ru/pls/tzp/f?p=220:562:13246815075804::::P562_OPEN_MODE,GLB_NAV_ROOT_ID,GLB_NAV_ID:,12920020,12920020"
@@ -29,7 +28,7 @@ class TatneftSpider(scrapy.Spider):
         header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
 
         for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse, headers=header)
+            yield SeleniumRequest(url=url, callback=self.parse, headers=header)
     
     def closed(self, reason):
         logger.debug(f'Closed, reason: {reason}')
