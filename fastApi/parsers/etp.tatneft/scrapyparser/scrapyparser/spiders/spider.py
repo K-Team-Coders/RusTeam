@@ -14,6 +14,8 @@ class TatneftSpider(scrapy.Spider):
             "https://etp.tatneft.ru/pls/tzp/f?p=220:562:13246815075804::::P562_OPEN_MODE,GLB_NAV_ROOT_ID,GLB_NAV_ID:,12920020,12920020"
         ]
         self.headers = []
+        self.datasummary = []
+        self.datasummary_items = []
 
         path = Path.cwd().parent.parent.joinpath("agents.json")
         logger.debug(path)        
@@ -26,8 +28,6 @@ class TatneftSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse, headers=header)
 
     def parse(self, response):
-        self.datasummary = []
-
         source = response.url
         logger.debug(source)
 
@@ -60,11 +60,33 @@ class TatneftSpider(scrapy.Spider):
         time.sleep(0.2)
         first_table = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td")
 
-        index = 1
+        items = []
 
         everything = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody")
         for table in everything.xpath("//table[@class='ReportTbl']"):
             if ("Кол-во" and "Наименование" and "№" and "Замечание") in table.get():
-                logger.debug('Goods here')
                 for tr in table.xpath('tbody/tr'):
-                    logger.debug(tr.xpath('td').getall())
+                    row = tr.xpath('td/text()').getall()
+
+                    name = row[1]
+                    number = row[2]
+                    metrics = row[3]
+                    mark = " "
+                    if len(row) == 5:
+                        mark = row[4]
+                    
+                    current_item = {
+                        "name": name,
+                        "number": number,
+                        "metrics": metrics,
+                        "mark": mark
+                    }
+
+                    items.append(current_item)
+
+        self.datasummary_items.append(
+            {
+                "url": response.url,
+                "items": items
+            }
+        )
