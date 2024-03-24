@@ -5,7 +5,9 @@ from pathlib import Path
 from loguru import logger
 
 import scrapy
-from scrapy_selenium import SeleniumRequest
+
+from selenium.webdriver.common.by import By
+from selenium import webdriver
 
 class TatneftSpider(scrapy.Spider):
     name = "tatneft"
@@ -14,6 +16,8 @@ class TatneftSpider(scrapy.Spider):
         self.headers = []
         self.datasummary = []
         self.datasummary_items = []
+
+        self.driver = webdriver.Chrome()
 
     def start_requests(self):
         urls = [
@@ -28,14 +32,14 @@ class TatneftSpider(scrapy.Spider):
         header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
 
         for url in urls:
-            yield SeleniumRequest(url=url, callback=self.parse, headers=header)
+            yield scrapy.Request(url=url, callback=self.parse, headers=header)
     
     def closed(self, reason):
         logger.debug(f'Closed, reason: {reason}')
         logger.debug(len(self.datasummary))
         logger.debug(len(self.datasummary_items))
 
-    def parse(self, response):
+    def parse(self, response):        
         source = response.url
         logger.debug(source)
 
@@ -58,10 +62,10 @@ class TatneftSpider(scrapy.Spider):
         
             self.datasummary.append(item)
 
-        div = response.xpath("//div[@class='a-IRR-paginationWrap a-IRR-paginationWrap--bottom']")
-        logger.debug(div.xpath('//button[@class="a-Button a-IRR-button a-IRR-button--pagination"]').get())
-        urls_to_check = []
+        # result = driver.findElement(By.CLASS_NAME, "a-Button a-IRR-button a-IRR-button--pagination").click()
+        # logger.debug(type(result))
 
+        urls_to_check = []
 
         for url in urls_to_check:
             header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
