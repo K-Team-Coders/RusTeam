@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ModalWindow v-if="isModalOpen" @close="isModalOpen = false" />
+    <ModalWindow v-if="isModalOpen" @close="isModalOpen = false" :tender_info="tender_info"/>
     <div class="pt-3 w-full">
       <div
         @click="isModalOpen = true"
@@ -26,7 +26,7 @@
         </div>
         <div class="w-2/12 text-end">
           <a
-            :href="`${tender_info.url}`"
+            :href="`${tender_info.url}`" target="_blank"
             class="text-activeText tracking-wide pt-1"
             >Перейти на страницу тендера</a
           >
