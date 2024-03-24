@@ -1,3 +1,4 @@
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -7,19 +8,25 @@ from bs4 import BeautifulSoup
 import time
 import pandas as pd
 import requests
+from pathlib import Path
 
 
 class TenderScraper:
-    def __init__(self, driver_path, chrome_binary_path):
+    def __init__(self, driver_path,chrome_binary_path):
         # Создаем сервис для ChromeDriver
         self.service = Service(driver_path)
-
+        
         # Создаем опции для браузера Chrome
-        self.chrome_options = Options()
-        self.chrome_options.binary_location = chrome_binary_path  # Устанавливаем путь к исполняемому файлу браузера Chrome
+        self.chrome_options = Options() # Устанавливаем путь к исполняемому файлу браузера Chrome
         self.chrome_options.add_argument('log-level=3')
+        self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument('--no-sandbox')
+        self.chrome_options.add_argument('--disable-dev-shm-usage')
+        self.chrome_options.binary_location = chrome_binary_path 
         self.table=[]
         self.buffer=[]
+        self.current_datetime = datetime.now()
+        self.formatted_date = self.current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
 
         # Создаем драйвер Chrome с использованием сервиса и опций
         self.driver = webdriver.Chrome(service=self.service, options=self.chrome_options)
@@ -109,7 +116,7 @@ class TenderScraper:
         self.get_urls(element, data_1, data_2)
         df = pd.DataFrame(self.table)
         logger.info(df)
-        df.to_csv("data.csv", sep=';', encoding='utf-8')
+        df.to_csv(f"document_{self.formatted_date}.csv", sep=';', encoding='utf-8')
         time.sleep(11)
         return ret_data
         
@@ -117,8 +124,8 @@ class TenderScraper:
         self.driver.quit()
 
 
-if __name__ == "__main__":
-    tender_scraper = TenderScraper('drivers\chromedriver.exe', 'chrome-win64\chrome.exe')
-    tender_scraper.driver.get('https://www.tender.pro/api/tenders/list?sid=&company_id=&face_id=0&order=3&tender_id=&tender_name=&company_name=&good_name=&tender_type=90&tender_state=100&country=0&region=&basis=0&okved=&dateb=&datee=&dateb2=&datee2=')
-    tender_scraper.scrape_data("Арматура", "10.02.2024", "15.03.2024")
-    tender_scraper.quit_driver()
+# if __name__ == "__main__":
+#     tender_scraper = TenderScraper("/usr/local/bin/chromedriver",'/usr/bin/google-chrome')
+#     tender_scraper.driver.get('https://www.tender.pro/api/tenders/list?sid=&company_id=&face_id=0&order=3&tender_id=&tender_name=&company_name=&good_name=&tender_type=90&tender_state=100&country=0&region=&basis=0&okved=&dateb=&datee=&dateb2=&datee2=')
+#     tender_scraper.scrape_data("Арматура", "10.02.2024", "15.03.2024")
+#     tender_scraper.quit_driver()
