@@ -13,11 +13,14 @@ class TatneftSpider(scrapy.Spider):
     name = "tatneft"
     
     def __init__(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument('window-size=1920x1080')
+
         self.headers = []
         self.datasummary = []
         self.datasummary_items = []
 
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(options=options)
 
     def start_requests(self):
         urls = [
@@ -39,7 +42,15 @@ class TatneftSpider(scrapy.Spider):
         logger.debug(len(self.datasummary))
         logger.debug(len(self.datasummary_items))
 
-    def parse(self, response):        
+    def parse(self, response):    
+        self.driver.get(response.url)
+        self.driver.maximize_window()
+        time.sleep(3)
+        buttons = self.driver.find_elements(By.TAG_NAME, "button")
+
+        for button in buttons:
+            button.find_element(By.CLASS_NAME, "a-Button a-IRR-button a-IRR-button--pagination").click()
+
         source = response.url
         logger.debug(source)
 
@@ -62,7 +73,6 @@ class TatneftSpider(scrapy.Spider):
         
             self.datasummary.append(item)
 
-        # result = driver.findElement(By.CLASS_NAME, "a-Button a-IRR-button a-IRR-button--pagination").click()
         # logger.debug(type(result))
 
         urls_to_check = []
