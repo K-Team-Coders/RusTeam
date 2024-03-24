@@ -76,6 +76,7 @@
         <!-- Карточки найденных тендеров -->
         <div class="pt-2">
           <LoaderBig v-if="isLoading" class="flex justify-center pt-16"/>
+          <ErrorPage v-else-if="isError" class="flex justify-center pt-16"/>
           <TenderCard
             v-else
             :tender_info="tender"
@@ -97,6 +98,7 @@ import TenderCard from "./TenderCard.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import LoaderBig from "./LoaderBig.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
+import ErrorPage from './ErrorPage.vue';
 
 export default {
   components: {
@@ -107,6 +109,7 @@ export default {
     TenderCard,
     VueDatePicker,
     LoaderBig,
+    ErrorPage
   },
 
   data() {
@@ -115,6 +118,7 @@ export default {
       date: null,
       isLoading: false,
       tenders_info: [],
+      isError: false
     };
   },
 
@@ -135,7 +139,11 @@ export default {
           console.log(response.data);
           this.tenders_info = response.data;
           this.isLoading = false;
-        });
+        })
+        .catch((error) => {
+          this.isError = true;
+        }
+        )
     },
     datetimeToDate(datetime) {
       const date = new Date(datetime);
