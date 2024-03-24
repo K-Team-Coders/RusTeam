@@ -934,21 +934,6 @@ w3lib = ">=1.17.0"
 "zope.interface" = ">=5.1.0"
 
 [[package]]
-name = "scrapy-selenium"
-version = "0.0.7"
-description = "Scrapy with selenium"
-optional = false
-python-versions = "*"
-files = [
-    {file = "scrapy-selenium-0.0.7.tar.gz", hash = "sha256:51f809802a1f62ed852cfe2d2ed49f6141058cc5254ed4b448d2ffe6f7a1b6e9"},
-    {file = "scrapy_selenium-0.0.7-py3-none-any.whl", hash = "sha256:70766315c7970b12a142e1b7a9f43ffb3ef1260891811062ec9dd46a665d935a"},
-]
-
-[package.dependencies]
-scrapy = ">=1.0.0"
-selenium = ">=3.9.0"
-
-[[package]]
 name = "selenium"
 version = "4.18.1"
 description = ""
@@ -1314,4 +1299,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "56f94fad6b8d0be49a14aea61a01d9a2b8aac38c2d580c0bee434dca4109b67c"
+content-hash = "6c30c92e28a142bb72f4ef2d8c95af625d206acb9706e08864e3ab713caafaab"

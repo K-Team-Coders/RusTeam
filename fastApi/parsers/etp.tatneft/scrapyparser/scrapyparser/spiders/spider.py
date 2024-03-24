@@ -5,15 +5,22 @@ from pathlib import Path
 from loguru import logger
 
 import scrapy
-from scrapy_selenium import SeleniumRequest
+
+from selenium.webdriver.common.by import By
+from selenium import webdriver
 
 class TatneftSpider(scrapy.Spider):
     name = "tatneft"
     
     def __init__(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument('window-size=1920x1080')
+
         self.headers = []
         self.datasummary = []
         self.datasummary_items = []
+
+        self.driver = webdriver.Chrome(options=options)
 
     def start_requests(self):
         urls = [
@@ -28,14 +35,22 @@ class TatneftSpider(scrapy.Spider):
         header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
 
         for url in urls:
-            yield SeleniumRequest(url=url, callback=self.parse, headers=header)
+            yield scrapy.Request(url=url, callback=self.parse, headers=header)
     
     def closed(self, reason):
         logger.debug(f'Closed, reason: {reason}')
         logger.debug(len(self.datasummary))
         logger.debug(len(self.datasummary_items))
 
-    def parse(self, response):
+    def parse(self, response):    
+        self.driver.get(response.url)
+        self.driver.maximize_window()
+        time.sleep(3)
+        buttons = self.driver.find_elements(By.TAG_NAME, "button")
+
+        for button in buttons:
+            button.find_element(By.CLASS_NAME, "a-Button a-IRR-button a-IRR-button--pagination").click()
+
         source = response.url
         logger.debug(source)
 
@@ -58,10 +73,9 @@ class TatneftSpider(scrapy.Spider):
         
             self.datasummary.append(item)
 
-        div = response.xpath("//div[@class='a-IRR-paginationWrap a-IRR-paginationWrap--bottom']")
-        logger.debug(div.xpath('//button[@class="a-Button a-IRR-button a-IRR-button--pagination"]').get())
-        urls_to_check = []
+        # logger.debug(type(result))
 
+        urls_to_check = []
 
         for url in urls_to_check:
             header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}

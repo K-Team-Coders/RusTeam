@@ -13,8 +13,9 @@
           <div class="flex flex-col gap-3 border-neutral-600 duration-500 pt-4">
             <!-- Ключевые слова -->
             <div class="flex items-start w-full">
-              <p class="text-activeText w-1/6">Ключевые слова</p>
-              <input v-model="keyword"
+              <p class="text-activeText w-1/6">Ключевое слово</p>
+              <input
+                v-model="keyword"
                 class="rounded-md w-4/6 h-12 pl-2.5 placeholder:text-sm border-[1px] border-neutral-300 shadow-sm"
                 placeholder="Например: сталь, 36.40.11.133"
               />
@@ -28,7 +29,7 @@
               />
             </div>
             <!-- Цена -->
-           
+
             <!-- Дата -->
             <div class="flex items-center w-full">
               <p class="text-activeText w-1/6">Период публикации</p>
@@ -47,7 +48,7 @@
             <!-- Кнопка найти -->
             <div class="flex pt-3">
               <button
-              @click="searchTender()"
+                @click.prevent="searchTender()"
                 type="button"
                 class="text-activeText px-5 py-2 rounded-md bg-blue-700 text-neutral-100 shadow-sm hover:bg-blue-900 duration-300"
               >
@@ -74,7 +75,13 @@
         </div>
         <!-- Карточки найденных тендеров -->
         <div class="pt-2">
-          <TenderCard v-for="el in 10" />
+          <LoaderBig v-if="isLoading" class="flex justify-center pt-16"/>
+          <TenderCard
+            v-else
+            :tender_info="tender"
+            v-for="tender in tenders_info"
+            :key="tender"
+          />
         </div>
       </div>
     </div>
@@ -88,7 +95,9 @@ import BaseIcon from "./BaseIcon.vue";
 import SidebarMain from "./SidebarMain.vue";
 import TenderCard from "./TenderCard.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
+import LoaderBig from "./LoaderBig.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
+
 export default {
   components: {
     AssistantCategoryService,
@@ -97,111 +106,62 @@ export default {
     SidebarMain,
     TenderCard,
     VueDatePicker,
+    LoaderBig,
   },
 
   data() {
     return {
-      keyword: '',
+      keyword: "",
       date: null,
+      isLoading: false,
+      tenders_info: [],
     };
   },
 
   methods: {
     searchTender() {
-      console.log({ Element: this.keyword,
-            date_1: this.datetimeToDate(this.date[0]) ,
-            date_2: this.datetimeToDate(this.date[1]) 
-          });
+      this.isLoading = true;
+      let post_data = {
+        element: this.keyword,
+        date_1: this.timestampToDate_created,
+        date_2: this.timestampToDate_finished,
+      };
+      console.log(post_data);
       axios
         .post(
-          `http://${process.env.VUE_APP_SEARCH_TENDER_SERVICE_IP}/docs`,
-          { 
-            element : this.keyword,
-            date_1: this.datetimeToDate(this.date[0]),
-            date_2: this.datetimeToDate(this.date[1])
-          }
+          `http://${process.env.VUE_APP_SEARCH_TENDER_SERVICE_IP}/parse_tenderpro?element=${this.keyword}&date_1=${this.timestampToDate_created}&date_2=${this.timestampToDate_finished}'`
         )
         .then((response) => {
           console.log(response.data);
+          this.tenders_info = response.data;
+          this.isLoading = false;
         });
     },
-    datetimeToDate(datetime){
+    datetimeToDate(datetime) {
       const date = new Date(datetime);
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
       const year = date.getFullYear();
       const formattedDate = `${day}.${month}.${year}`;
       console.log(formattedDate);
-      return formattedDate
-    }
+      return formattedDate;
+    },
   },
 
   computed: {
     isDarkMode() {
       return this.$store.state.darkMode;
     },
+    timestampToDate_created() {
+      return this.datetimeToDate(this.date[0]);
+    },
+    timestampToDate_finished() {
+      return this.datetimeToDate(this.date[1]);
+    },
   },
 };
 </script>
 <style>
-.rainbows {
-  position: relative;
-}
-
-@keyframes rainbow {
-  0% {
-    color: white;
-  }
-
-  33% {
-    color: blue;
-  }
-
-  66% {
-    color: red;
-  }
-
-  100% {
-    color: white;
-  }
-}
-
-.owl {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  background-image: url("https://freesvg.org/img/1531730612.png");
-  background-size: cover;
-  animation: fly-around 5s ease-in-out infinite;
-}
-
-@keyframes fly-around {
-  0% {
-    left: 40px;
-    top: 0px;
-  }
-
-  25% {
-    left: 40px;
-    top: 20px;
-  }
-
-  50% {
-    left: 55px;
-    top: 5px;
-  }
-
-  75% {
-    left: 25;
-    top: 15px;
-  }
-
-  100% {
-    left: 40px;
-    top: 0px;
-  }
-}
-
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #535353 #272727;
