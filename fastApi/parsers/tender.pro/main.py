@@ -31,5 +31,5 @@ async def parse_tender_pro(element:str,data_1:str,data_2:str):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run("main:app", host="localhost", port=8080, reload=True)
+    uvicorn.run("main:app", host="26.204.194.141", port=8080, reload=True)
 

@@ -31,34 +31,56 @@ class TenderScraper:
 
         page = requests.get(url)
         soup = BeautifulSoup(page.text, "html.parser")
+        try:
+            error_elem = soup.find_all(string="Этот конкурс является закрытым")
+            logger.success(f"Закрыт ли конкурс: {error_elem}")
+        except: 
+            pass
+        
+        logger.error(error_elem)
+        if len(error_elem) != 0:
+            one_element["tender_name"] = "Конкурс закрыт без приглашения"
+            one_element["tender_id"] = "Конкурс закрыт без приглашения"
+            one_element["organization"] = "Конкурс закрыт без приглашения"
+            one_element["goods"] = "Конкурс закрыт без приглашения"
+            one_element["documents"] = "Конкурс закрыт без приглашения"
+            one_element["data_execution"] = "Конкурс закрыт без приглашения"
+            one_element["data_created"] = "Конкурс закрыт без приглашения"
+            logger.error(f"Конкурс закрыт: {one_element}")
+            return one_element
+        else:
+                #------------
+                tender_name=soup.find(attrs={"class":{"text__word-break"}}).text
+                one_element["tender_name"]=tender_name
+                #------------
+                tags=soup.find_all(attrs={"class":{"tag__item__title"}})
+                
+                one_element["data_created"]=tags[1].text
+                one_element["tender_id"]=tags[2].text
+                one_element["data_execution"]=tags[5].text
 
-        tender_name = soup.find(attrs={"class": {"text__word-break"}}).text
-        one_element["tender_name"] = tender_name
-
-        tags = soup.find_all(attrs={"class": {"tag__item__title"}})
-        one_element["data_created"] = tags[1].text
-        one_element["tender_id"] = tags[2].text
-        one_element["data_execution"] = tags[5].text
-
-        documents = soup.find_all(attrs={"class": {"link _black2 text-d-ul"}})
-        doc_buffer = []
-        for i in documents:
-            doc_buffer.append("https://www.tender.pro" + i.get("href"))
-        one_element["documents"] = doc_buffer
-
-        organization = soup.find_all(attrs={"class": {"_black"}})
-        one_element["organization"] = organization[1].text
-
-        goods = soup.find_all(attrs={"class": {"_black text__word-break"}})
-        goods_count = soup.select('.table-history-col.c-gray.text_center._fix-80.hide-sm')[2:]
-        goods_type = soup.select('.table-history-col.text_center._fix-80.hide-sm')[2:]
-        goods_buffer = []
-        for i, j, k in zip(goods, goods_count, goods_type):
-            goods_buffer.append([i.text, j.text, k.text])
-        one_element["goods"] = goods_buffer
-
-        logger.debug(one_element)
-        return one_element
+                documents=soup.find_all(attrs={"class":{"link _black2 text-d-ul"}})
+                doc_buffer=[]
+                for i in documents:
+                    doc_buffer.append({"name": i.text, "url": "https://www.tender.pro"+i.get("href")})
+                one_element["documents"]=doc_buffer
+                #------------
+                organization=soup.find_all(attrs={"class":{"_black"}})
+                one_element["organization"]=organization[1].text
+                #------------
+                goods=soup.find_all(attrs={"class":{"_black text__word-break"}})
+                logger.warning(goods)
+                goods_count=soup.select('.table-history-col.c-gray.text_center._fix-80.hide-sm')[2:]
+                # logger.error(goods_count)
+                goods_type=soup.select('.table-history-col.text_center._fix-80.hide-sm')[2:]
+                # logger.debug(goods_type)
+                goods_buffer=[]
+                for good, good_count, good_type in zip(goods, goods_count, goods_type):
+                    goods_buffer.append({"name": good.text, "count": good_count.text, "type": good_type.text, "url": "https://www.tender.pro"+good.get("href")})
+                one_element["goods"] = goods_buffer
+                #------------
+                logger.debug(one_element)
+                return one_element
 
     def get_urls(self, element, data_1, data_2):
         input_element_good_name = self.driver.find_element(By.ID, "good_name_id")
