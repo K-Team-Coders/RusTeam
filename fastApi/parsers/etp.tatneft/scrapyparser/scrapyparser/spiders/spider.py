@@ -36,14 +36,14 @@ class TatneftSpider(scrapy.Spider):
         header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
 
         for url in urls:
-            yield scrapy.Request(url=url, callback=self.recon, headers=header)
+            yield scrapy.Request(url=url, callback=self.parse, headers=header)
     
     def closed(self, reason):
         logger.debug(f'Closed, reason: {reason}')
         logger.debug(len(self.datasummary))
         logger.debug(len(self.datasummary_items))
 
-    def recon(self, response):
+    def parse(self, response):
         reached_end = True
         self.driver.get(response.url)
         self.driver.maximize_window()
@@ -78,7 +78,7 @@ class TatneftSpider(scrapy.Spider):
                     url = td.xpath("a").xpath("@href").get()
 
                     if url:
-                        detailed_url = response.follow(url=url).url
+                        detailed_url = "https://etp.tatneft.ru/pls/tzp/" + str(url)
                         item["DETAILED_URL"] = detailed_url
 
                         urls_to_check.append(detailed_url)
@@ -96,43 +96,44 @@ class TatneftSpider(scrapy.Spider):
                 self.datasummary.append(item)
 
             for url in urls_to_check:
-                header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
-                yield scrapy.Request(url, callback=self.detailed_parse, headers=header)
+                time.sleep(2.0)
+                self.driver.get(url)
+                page = self.driver.page_source
 
-    def detailed_parse(self, response):
-        time.sleep(0.2)
-        first_table = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td")
+                items = []
+                selector = Selector(text=page)
+                everything = selector.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody")
 
-        items = []
+                logger.debug(everything.xpath("//table[@class='ReportTbl']"))
 
-        everything = response.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody")
-        for table in everything.xpath("//table[@class='ReportTbl']"):
-            if ("Кол-во" and "Наименование" and "№" and "Замечание") in table.get():
-                for tr in table.xpath('tbody/tr'):
-                    row = tr.xpath('td/text()').getall()
+                for table in everything.xpath("//table[@class='ReportTbl']"):
+                    if ("Кол-во" and "Наименование" and "№" and "Замечание") in table.get():
+                        for tr in table.xpath('tbody/tr'):
+                            row = tr.xpath('td/text()').getall()
+                            logger.debug(row)
+                            logger.debug(url)
+                            name = row[1]
+                            number = row[2]
+                            metrics = row[3]
+                            mark = " "
+                            if len(row) == 5:
+                                mark = row[4]
+                            
+                            current_item = {
+                                "name": name,
+                                "number": number,
+                                "metrics": metrics,
+                                "mark": mark
+                            }
 
-                    name = row[1]
-                    number = row[2]
-                    metrics = row[3]
-                    mark = " "
-                    if len(row) == 5:
-                        mark = row[4]
-                    
-                    current_item = {
-                        "name": name,
-                        "number": number,
-                        "metrics": metrics,
-                        "mark": mark
+                            items.append(current_item)
+
+                logger.debug("Added")
+                logger.debug(items)
+
+                self.datasummary_items.append(
+                    {
+                        "url": response.url,
+                        "items": items
                     }
-
-                    items.append(current_item)
-
-        logger.debug("Added")
-        logger.debug(items)
-
-        self.datasummary_items.append(
-            {
-                "url": response.url,
-                "items": items
-            }
-        )
+                )
