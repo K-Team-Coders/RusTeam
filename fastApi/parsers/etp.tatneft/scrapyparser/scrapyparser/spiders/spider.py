@@ -104,32 +104,26 @@ class TatneftSpider(scrapy.Spider):
                 selector = Selector(text=page)
                 everything = selector.xpath("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody")
 
-                logger.debug(everything.xpath("//table[@class='ReportTbl']"))
-
                 for table in everything.xpath("//table[@class='ReportTbl']"):
                     if ("Кол-во" and "Наименование" and "№" and "Замечание") in table.get():
                         for tr in table.xpath('tbody/tr'):
                             row = tr.xpath('td/text()').getall()
-                            logger.debug(row)
-                            logger.debug(url)
-                            name = row[1]
-                            number = row[2]
-                            metrics = row[3]
-                            mark = " "
-                            if len(row) == 5:
-                                mark = row[4]
-                            
-                            current_item = {
-                                "name": name,
-                                "number": number,
-                                "metrics": metrics,
-                                "mark": mark
-                            }
+                            if row:
+                                name = row[1]
+                                number = row[2]
+                                metrics = row[3]
+                                mark = " "
+                                if len(row) == 5:
+                                    mark = row[4]
+                                
+                                current_item = {
+                                    "name": name,
+                                    "number": number,
+                                    "metrics": metrics,
+                                    "mark": mark
+                                }
 
-                            items.append(current_item)
-
-                logger.debug("Added")
-                logger.debug(items)
+                                items.append(current_item)
 
                 self.datasummary_items.append(
                     {
