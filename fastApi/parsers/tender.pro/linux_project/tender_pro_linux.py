@@ -15,11 +15,14 @@ class TenderScraper:
     def __init__(self, driver_path, chrome_binary_path):
         # Создаем сервис для ChromeDriver
         self.service = Service(driver_path)
-
+        
         # Создаем опции для браузера Chrome
-        self.chrome_options = Options()
-        self.chrome_options.binary_location = chrome_binary_path  # Устанавливаем путь к исполняемому файлу браузера Chrome
+        self.chrome_options = Options() # Устанавливаем путь к исполняемому файлу браузера Chrome
         self.chrome_options.add_argument('log-level=3')
+        self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument('--no-sandbox')
+        self.chrome_options.add_argument('--disable-dev-shm-usage')
+        self.chrome_options.binary_location = chrome_binary_path 
         self.table=[]
         self.buffer=[]
         self.current_datetime = datetime.now()
