@@ -41,7 +41,7 @@ class TenderScraper:
         except: 
             pass
         one_element['url']=page.url
-        logger.error(error_elem)
+        # logger.error(error_elem)
         if len(error_elem) != 0:
             one_element["tender_name"] = "Конкурс закрыт без приглашения"
             one_element["tender_id"] = "Конкурс закрыт без приглашения"
@@ -74,7 +74,7 @@ class TenderScraper:
                 #------------
                 goods=soup.find_all("div",class_="table-history")[0].find_all(attrs={"class":{"_black text__word-break"}})
 
-                logger.error(goods)
+                # logger.error(goods)
                 
                 goods_count=soup.find_all("div", class_="table-history-col c-gray text_center _fix-80 hide-sm")[2:]
                 
@@ -88,7 +88,7 @@ class TenderScraper:
                     goods_buffer.append({"name": good.text, "count": good_count.text, "type": good_type.text, "url": "https://www.tender.pro"+good.get("href")})
                 one_element["goods"] = goods_buffer
                 #------------
-                logger.debug(one_element)
+                # logger.debug(one_element)
                 return one_element
 
     def get_urls(self, element, data_1, data_2):
@@ -117,8 +117,7 @@ class TenderScraper:
         ret_data=self.table
         self.get_urls(element, data_1, data_2)
         df = pd.DataFrame(self.table)
-        logger.info(df)
-        df.to_csv(f"document_{self.formatted_date}.csv", sep=';', encoding='utf-8')
+        df.to_csv(Path.cwd().joinpath("documents").joinpath(f"document_{self.formatted_date}.csv"), sep=';', encoding='utf-8')
         time.sleep(11)
         return ret_data
         
@@ -127,7 +126,7 @@ class TenderScraper:
 
 
 if __name__ == "__main__":
-    tender_scraper = TenderScraper(str(Path.cwd().joinpath("drivers").joinpath("chromedriver.exe")),str(Path.cwd().joinpath('chrome-win64').joinpath('chrome.exe')))
+    tender_scraper = TenderScraper(str(Path.cwd().joinpath("drivers").joinpath("chromedriver-win64").joinpath("chromedriver.exe")),str(Path.cwd().joinpath("drivers").joinpath('chrome-win64').joinpath('chrome.exe')))
     tender_scraper.driver.get('https://www.tender.pro/api/tenders/list?sid=&company_id=&face_id=0&order=3&tender_id=&tender_name=&company_name=&good_name=&tender_type=90&tender_state=100&country=0&region=&basis=0&okved=&dateb=&datee=&dateb2=&datee2=')
     tender_scraper.scrape_data("Арматура", "10.03.2024", "11.03.2024")
     tender_scraper.quit_driver()

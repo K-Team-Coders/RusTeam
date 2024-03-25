@@ -12,17 +12,14 @@ from pathlib import Path
 
 
 class TenderScraper:
-    def __init__(self, driver_path,chrome_binary_path):
+    def __init__(self, driver_path, chrome_binary_path):
         # Создаем сервис для ChromeDriver
         self.service = Service(driver_path)
-        
+
         # Создаем опции для браузера Chrome
-        self.chrome_options = Options() # Устанавливаем путь к исполняемому файлу браузера Chrome
+        self.chrome_options = Options()
+        self.chrome_options.binary_location = chrome_binary_path  # Устанавливаем путь к исполняемому файлу браузера Chrome
         self.chrome_options.add_argument('log-level=3')
-        self.chrome_options.add_argument("--headless")
-        self.chrome_options.add_argument('--no-sandbox')
-        self.chrome_options.add_argument('--disable-dev-shm-usage')
-        self.chrome_options.binary_location = chrome_binary_path 
         self.table=[]
         self.buffer=[]
         self.current_datetime = datetime.now()
@@ -43,8 +40,8 @@ class TenderScraper:
             logger.success(f"Закрыт ли конкурс: {error_elem}")
         except: 
             pass
-        
-        logger.error(error_elem)
+        one_element['url']=page.url
+        # logger.error(error_elem)
         if len(error_elem) != 0:
             one_element["tender_name"] = "Конкурс закрыт без приглашения"
             one_element["tender_id"] = "Конкурс закрыт без приглашения"
@@ -74,20 +71,24 @@ class TenderScraper:
                 #------------
                 organization=soup.find_all(attrs={"class":{"_black"}})
                 one_element["organization"]=organization[1].text
-
+                #------------
                 goods=soup.find_all("div",class_="table-history")[0].find_all(attrs={"class":{"_black text__word-break"}})
 
+                # logger.error(goods)
+                
                 goods_count=soup.find_all("div", class_="table-history-col c-gray text_center _fix-80 hide-sm")[2:]
                 
                 # logger.warning(goods_count)
                 goods_type=soup.find_all("div",class_="table-history-col text_center _fix-80 hide-sm")
+                
+                
                 
                 goods_buffer=[]
                 for good, good_count, good_type in zip(goods, goods_count, goods_type):
                     goods_buffer.append({"name": good.text, "count": good_count.text, "type": good_type.text, "url": "https://www.tender.pro"+good.get("href")})
                 one_element["goods"] = goods_buffer
                 #------------
-                logger.debug(one_element)
+                # logger.debug(one_element)
                 return one_element
 
     def get_urls(self, element, data_1, data_2):
@@ -116,8 +117,7 @@ class TenderScraper:
         ret_data=self.table
         self.get_urls(element, data_1, data_2)
         df = pd.DataFrame(self.table)
-        logger.info(df)
-        df.to_csv(f"document_{self.formatted_date}.csv", sep=';', encoding='utf-8')
+        df.to_csv(Path.cwd().joinpath("documents").joinpath(f"document_{self.formatted_date}.csv"), sep=';', encoding='utf-8')
         time.sleep(11)
         return ret_data
         

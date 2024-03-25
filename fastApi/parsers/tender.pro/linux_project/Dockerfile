@@ -1,6 +1,7 @@
 FROM python:3.10
 
 RUN apt-get update && apt-get install -y wget unzip
+
 RUN wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.58/linux64/chromedriver-linux64.zip \
     && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
     && rm /tmp/chromedriver.zip \
