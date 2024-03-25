@@ -93,11 +93,14 @@
                     {{ index + 1 }}
                   </td>
                   <td
-                    :href="`${good.url}`"
-                    target="_blank"
+                    
                     class="px-6 py-4 font-medium"
                   >
+                  <a :href="`${good.url}`"
+                    target="_blank">
+
                     {{ good.name }}
+                  </a>
                   </td>
                   <td class="px-6 py-4">
                     {{ good.count }}
