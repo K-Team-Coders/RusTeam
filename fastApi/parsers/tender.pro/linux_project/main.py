@@ -3,7 +3,7 @@ from loguru import logger
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from tenderpor_class_parser import TenderScraper
+from tender_pro_linux import TenderScraper
 from datetime import date
 from pydantic import BaseModel
 from pathlib import Path
