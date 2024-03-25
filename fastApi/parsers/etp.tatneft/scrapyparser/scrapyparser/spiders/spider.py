@@ -4,10 +4,11 @@ import random
 from pathlib import Path
 from loguru import logger
 
+from parsel import Selector
 import scrapy
-
-from selenium.webdriver.common.by import By
+from scrapy.http import TextResponse 
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 class TatneftSpider(scrapy.Spider):
     name = "tatneft"
@@ -35,51 +36,62 @@ class TatneftSpider(scrapy.Spider):
         header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
 
         for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse, headers=header)
+            yield scrapy.Request(url=url, callback=self.recon, headers=header)
     
     def closed(self, reason):
         logger.debug(f'Closed, reason: {reason}')
         logger.debug(len(self.datasummary))
         logger.debug(len(self.datasummary_items))
 
-    def parse(self, response):    
+    def recon(self, response):
+        reached_end = True
         self.driver.get(response.url)
         self.driver.maximize_window()
         time.sleep(3)
-        buttons = self.driver.find_elements(By.TAG_NAME, "button")
 
-        for button in buttons:
-            button.find_element(By.CLASS_NAME, "a-Button a-IRR-button a-IRR-button--pagination").click()
+        pages = []
+        while reached_end:
+            if len(pages) > 1:
+                reached_end = False
+            try:
+                pages.append(self.driver.page_source)
+                button = self.driver.find_elements(By.XPATH, "//*[@id='R25399004548800692_data_panel']/div[2]/ul/li[3]/button")
+                if button:
+                    button[0].click()
+                    time.sleep(2)
+                else:
+                    reached_end = False
+            except Exception as e:
+                logger.error(e)
 
-        source = response.url
-        logger.debug(source)
+        for page in pages:
+            urls_to_check = []
 
-        urls_to_check = []
+            selector = Selector(text=page)
+            table = selector.xpath("//table[@class='a-IRR-table']/tbody")
 
-        table = response.xpath("//table[@class='a-IRR-table']")
-        for tr in table.xpath('tr'):
-            item = {}
-            for td in tr.xpath('td'):
+            for tr in table.xpath('tr'):
                 
-                url = td.xpath("a").xpath("@href").get()
+                item = {}
+                for td in tr.xpath('td'):
+                    
+                    url = td.xpath("a").xpath("@href").get()
 
-                if url:
-                    detailed_url = response.follow(url=url).url
-                    item["DETAILED_URL"] = detailed_url
+                    if url:
+                        detailed_url = response.follow(url=url).url
+                        item["DETAILED_URL"] = detailed_url
 
-                    urls_to_check.append(detailed_url)
+                        urls_to_check.append(detailed_url)
 
-                item[f"{td.xpath('@headers').get()}"] = td.css("td::text").get()
-        
-            self.datasummary.append(item)
+                    item[f"{td.xpath('@headers').get()}"] = td.css("td::text").get()
+                    
+                self.datasummary.append(item)
 
-        # logger.debug(type(result))
+                logger.debug(item)
 
-        urls_to_check = []
-
-        for url in urls_to_check:
-            header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
-            yield scrapy.Request(url, callback=self.detailed_parse, headers=header)
+            for url in urls_to_check:
+                header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
+                yield scrapy.Request(url, callback=self.detailed_parse, headers=header)
 
     def detailed_parse(self, response):
         time.sleep(0.2)
@@ -108,6 +120,9 @@ class TatneftSpider(scrapy.Spider):
                     }
 
                     items.append(current_item)
+
+        logger.debug("Added")
+        logger.debug(items)
 
         self.datasummary_items.append(
             {
