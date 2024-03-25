@@ -83,11 +83,17 @@ class TatneftSpider(scrapy.Spider):
 
                         urls_to_check.append(detailed_url)
 
-                    item[f"{td.xpath('@headers').get()}"] = td.css("td::text").get()
+                    value = 0 
+                    key = td.xpath('@headers').get()
+
+                    if td.xpath('nobr/text()'):
+                        value = td.xpath('nobr/text()').get()
+                    else:
+                        value = td.css("td::text").get()
+
+                    item[f"{key}"] = value
                     
                 self.datasummary.append(item)
-
-                logger.debug(item)
 
             for url in urls_to_check:
                 header = {"User-Agent": self.headers[random.randrange(0, len(self.headers))]["user_agent"]}
