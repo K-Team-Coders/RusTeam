@@ -32,7 +32,7 @@ def root():
 @app.post("/parse_tenderpro")
 async def parse_tender_pro(element:str,date_1:str,date_2:str,filter:MyModel):
     logger.success(filter)
-    tender_scraper = TenderScraper(str(Path.cwd().joinpath("drivers").joinpath("chromedriver-win64").joinpath("chromedriver.exe")),str(Path.cwd().joinpath("drivers").joinpath('chrome-win64').joinpath('chrome.exe')))
+    tender_scraper = TenderScraper("/usr/local/bin/chromedriver-linux64/chromedriver",'/usr/bin/google-chrome')
     tender_scraper.driver.get('https://www.tender.pro/api/tenders/list?sid=&company_id=&face_id=0&order=3&tender_id=&tender_name=&company_name=&good_name=&tender_type=90&tender_state=100&country=0&region=&basis=0&okved=&dateb=&datee=&dateb2=&datee2=')
     result=tender_scraper.scrape_data(element, date_1, date_2)
     filter_instance = TextFilter(filter.filter)
